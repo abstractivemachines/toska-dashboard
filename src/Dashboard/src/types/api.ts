@@ -116,6 +116,7 @@ export interface TraceQueryParameters {
   maxDurationMs?: number;
   page?: number;
   pageSize?: number;
+  includeTotal?: boolean;
 }
 
 export interface TracePerformanceResponse {

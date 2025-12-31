@@ -30,6 +30,7 @@ export async function getTraces(
     if (params.maxDurationMs !== undefined) queryParams.maxDurationMs = params.maxDurationMs.toString();
     if (params.page !== undefined) queryParams.page = params.page.toString();
     if (params.pageSize !== undefined) queryParams.pageSize = params.pageSize.toString();
+    if (params.includeTotal) queryParams.includeTotal = 'true';
   }
 
   return apiGet<TraceQueryResponse>(baseUrl, TRACES_BASE, queryParams, signal);

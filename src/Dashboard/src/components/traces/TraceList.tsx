@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { useTraces } from '../../hooks';
 import { LoadingState, ErrorState } from '../common';
 import { TraceRow } from './TraceRow';
@@ -7,7 +7,12 @@ import type { TraceQueryParameters } from '../../types/api';
 
 export function TraceList() {
   const [filters, setFilters] = useState<TraceQueryParameters>({});
-  const { data, loading, error, refetch } = useTraces(filters);
+  const [includeTotal, setIncludeTotal] = useState(false);
+  const queryParams = useMemo(
+    () => ({ ...filters, includeTotal }),
+    [filters, includeTotal]
+  );
+  const { data, loading, error, refetch } = useTraces(queryParams);
 
   const handleFilterChange = useCallback((params: TraceQueryParameters) => {
     setFilters(params);
@@ -45,7 +50,17 @@ export function TraceList() {
             </table>
           </div>
           <div className="pagination-info">
-            Showing {data.items.length} of {data.total} traces (Page {data.page})
+            {includeTotal
+              ? `Showing ${data.items.length} of ${data.total} traces (Page ${data.page})`
+              : `Showing ${data.items.length} traces (Page ${data.page})`}
+            {' '}
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={() => setIncludeTotal((value) => !value)}
+            >
+              {includeTotal ? 'Hide total' : 'Show total'}
+            </button>
           </div>
         </>
       )}

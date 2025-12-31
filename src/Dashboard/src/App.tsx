@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { ConfigProvider } from './context';
 import { useHashRouter, createRoute } from './router';
-import { Header, Navigation } from './components/layout';
+import { Footer, Header, Navigation } from './components/layout';
 import { HomePage, ServicePage, TracesPage, TraceDetailPage, NotFoundPage } from './pages';
 import './app.css';
 
@@ -48,6 +48,7 @@ export default function App() {
         <main className="main-content">
           <Router />
         </main>
+        <Footer />
       </div>
     </ConfigProvider>
   );
