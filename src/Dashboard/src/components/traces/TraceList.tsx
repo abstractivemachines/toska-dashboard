@@ -13,6 +13,12 @@ export function TraceList() {
     [filters, includeTotal]
   );
   const { data, loading, error, refetch } = useTraces(queryParams);
+  const sortedItems = useMemo(() => {
+    if (!data) return [];
+    return [...data.items].sort((a, b) => {
+      return new Date(b.startTimeUtc).getTime() - new Date(a.startTimeUtc).getTime();
+    });
+  }, [data]);
 
   const handleFilterChange = useCallback((params: TraceQueryParameters) => {
     setFilters(params);
@@ -33,17 +39,17 @@ export function TraceList() {
             <table className="data-table">
               <thead>
                 <tr>
-                  <th>Trace ID</th>
-                  <th>Service</th>
-                  <th>Operation</th>
-                  <th>Status</th>
-                  <th>Duration</th>
-                  <th>Spans</th>
-                  <th>Started</th>
+                  <th className="col-trace-id">Trace ID</th>
+                  <th className="col-service">Service</th>
+                  <th className="col-operation">Operation</th>
+                  <th className="col-status">Status</th>
+                  <th className="col-duration numeric">Duration</th>
+                  <th className="col-spans numeric">Spans</th>
+                  <th className="col-started">Started</th>
                 </tr>
               </thead>
               <tbody>
-                {data.items.map((trace) => (
+                {sortedItems.map((trace) => (
                   <TraceRow key={trace.traceId} trace={trace} />
                 ))}
               </tbody>

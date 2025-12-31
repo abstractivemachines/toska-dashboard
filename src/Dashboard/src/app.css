@@ -432,6 +432,7 @@ header {
   width: 100%;
   border-collapse: collapse;
   font-size: 14px;
+  table-layout: fixed;
 }
 
 .data-table th,
@@ -457,6 +458,46 @@ header {
 .data-table .numeric {
   text-align: right;
   font-variant-numeric: tabular-nums;
+}
+
+.data-table .col-trace-id {
+  width: 150px;
+}
+
+.data-table .col-status {
+  width: 100px;
+}
+
+.data-table .col-duration {
+  width: 90px;
+  white-space: nowrap;
+}
+
+.data-table .col-spans {
+  width: 70px;
+  white-space: nowrap;
+}
+
+.data-table .col-started {
+  width: 110px;
+  white-space: nowrap;
+}
+
+.data-table th.col-duration,
+.data-table td.col-duration,
+.data-table th.col-spans,
+.data-table td.col-spans,
+.data-table th.col-started,
+.data-table td.col-started {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.data-table td.col-service,
+.data-table td.col-operation {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .data-table .clickable {
