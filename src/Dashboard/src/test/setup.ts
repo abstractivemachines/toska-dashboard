@@ -6,6 +6,7 @@ import { cleanup } from '@testing-library/react';
 afterEach(() => {
   cleanup();
   vi.clearAllMocks();
+  window.localStorage?.clear();
 });
 
 // Mock window.__DASHBOARD_CONFIG__
@@ -15,19 +16,44 @@ Object.defineProperty(window, '__DASHBOARD_CONFIG__', {
   configurable: true,
 });
 
-// Mock matchMedia for uPlot
+// Mock matchMedia for uPlot and theme detection
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
-  value: vi.fn().mockImplementation((query: string) => ({
+  value: (query: string) => ({
     matches: false,
     media: query,
     onchange: null,
-    addListener: vi.fn(),
-    removeListener: vi.fn(),
-    addEventListener: vi.fn(),
-    removeEventListener: vi.fn(),
-    dispatchEvent: vi.fn(),
-  })),
+    addListener: () => {},
+    removeListener: () => {},
+    addEventListener: () => {},
+    removeEventListener: () => {},
+    dispatchEvent: () => false,
+  }),
+});
+
+// Mock localStorage for theme hook usage
+Object.defineProperty(window, 'localStorage', {
+  value: (() => {
+    let store: Record<string, string> = {};
+    return {
+      getItem: (key: string) => (key in store ? store[key] : null),
+      setItem: (key: string, value: string) => {
+        store[key] = value;
+      },
+      removeItem: (key: string) => {
+        delete store[key];
+      },
+      clear: () => {
+        store = {};
+      },
+      key: (index: number) => Object.keys(store)[index] ?? null,
+      get length() {
+        return Object.keys(store).length;
+      },
+    };
+  })(),
+  writable: true,
+  configurable: true,
 });
 
 // Mock ResizeObserver for uPlot
