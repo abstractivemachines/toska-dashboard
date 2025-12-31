@@ -832,38 +832,110 @@ header {
   padding: 12px;
   margin-top: 8px;
   background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
+  display: grid;
+  gap: 12px;
 }
 
-.span-attributes {
+.span-meta-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 12px;
+}
+
+.span-meta-item {
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.span-meta-label {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 10px;
+  color: var(--color-text-muted);
+}
+
+.span-meta-value {
+  font-size: 13px;
+  color: var(--color-text);
+  word-break: break-word;
+}
+
+.span-meta-value code {
+  word-break: break-all;
+}
+
+.span-status {
+  align-self: flex-start;
+  padding: 2px 10px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-alt);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+.span-status.error {
+  color: var(--color-error);
+  border-color: var(--color-error);
+}
+
+.span-attributes-panel {
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.span-attributes-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: var(--color-text);
+}
+
+.span-attributes-count {
+  color: var(--color-text-muted);
+  font-weight: 500;
+}
+
+.span-attributes-list {
+  margin: 0;
+  display: grid;
   gap: 8px;
+}
+
+.span-attribute-row {
+  display: grid;
+  grid-template-columns: minmax(160px, 260px) 1fr;
+  gap: 12px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: var(--color-bg-alt);
+}
+
+.span-attribute-key {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  word-break: break-word;
+}
+
+.span-attribute-value {
   margin: 0;
   font-size: 12px;
-}
-
-.span-attributes > div {
-  display: flex;
-  gap: 8px;
-}
-
-.span-attributes dt {
-  color: var(--color-text-muted);
-  min-width: 80px;
-}
-
-.span-attributes dd {
-  margin: 0;
-}
-
-.span-attributes-section {
-  grid-column: 1 / -1;
-}
-
-.nested-attributes {
-  margin: 8px 0 0;
-  padding-left: 16px;
+  color: var(--color-text);
+  word-break: break-word;
 }
 
 /* ============================================================================

@@ -23,6 +23,7 @@ export function SpanBar({ span }: SpanBarProps) {
 
   const isError = span.status === 'Error';
   const barColor = isError ? 'var(--color-error)' : 'var(--color-primary)';
+  const attributes = span.attributes ? Object.entries(span.attributes) : [];
 
   return (
     <div className="span-row" style={{ paddingLeft: `${span.depth * 20}px` }}>
@@ -52,41 +53,45 @@ export function SpanBar({ span }: SpanBarProps) {
 
       {expanded && (
         <div className="span-details">
-          <dl className="span-attributes">
-            <div>
-              <dt>Span ID</dt>
-              <dd><code>{span.spanId}</code></dd>
+          <div className="span-meta-grid">
+            <div className="span-meta-item">
+              <span className="span-meta-label">Span ID</span>
+              <span className="span-meta-value"><code>{span.spanId}</code></span>
             </div>
             {span.parentSpanId && (
-              <div>
-                <dt>Parent Span</dt>
-                <dd><code>{span.parentSpanId}</code></dd>
+              <div className="span-meta-item">
+                <span className="span-meta-label">Parent Span</span>
+                <span className="span-meta-value"><code>{span.parentSpanId}</code></span>
               </div>
             )}
-            <div>
-              <dt>Kind</dt>
-              <dd>{span.kind || 'Internal'}</dd>
+            <div className="span-meta-item">
+              <span className="span-meta-label">Kind</span>
+              <span className="span-meta-value">{span.kind || 'Internal'}</span>
             </div>
-            <div>
-              <dt>Status</dt>
-              <dd className={isError ? 'error' : ''}>{span.status}</dd>
+            <div className="span-meta-item">
+              <span className="span-meta-label">Status</span>
+              <span className={`span-meta-value span-status ${isError ? 'error' : ''}`}>
+                {span.status}
+              </span>
             </div>
-            {span.attributes && Object.keys(span.attributes).length > 0 && (
-              <div className="span-attributes-section">
-                <dt>Attributes</dt>
-                <dd>
-                  <dl className="nested-attributes">
-                    {Object.entries(span.attributes).map(([key, value]) => (
-                      <div key={key}>
-                        <dt>{key}</dt>
-                        <dd>{value || '-'}</dd>
-                      </div>
-                    ))}
-                  </dl>
-                </dd>
+          </div>
+
+          {attributes.length > 0 && (
+            <div className="span-attributes-panel">
+              <div className="span-attributes-header">
+                <span>Span Attributes</span>
+                <span className="span-attributes-count">{attributes.length} items</span>
               </div>
-            )}
-          </dl>
+              <dl className="span-attributes-list">
+                {attributes.map(([key, value]) => (
+                  <div key={key} className="span-attribute-row">
+                    <dt className="span-attribute-key">{key}</dt>
+                    <dd className="span-attribute-value">{value || '-'}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          )}
         </div>
       )}
     </div>
