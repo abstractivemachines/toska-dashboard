@@ -1,0 +1,7 @@
+# Local registry image overrides for Talos
+
+dashboard:
+  image:
+    repository: talos:30500/toskamesh-dashboard
+    tag: local
+    pullPolicy: Always

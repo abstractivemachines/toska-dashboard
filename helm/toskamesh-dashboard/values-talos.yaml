@@ -1,0 +1,15 @@
+# Dashboard configuration
+
+dashboard:
+  replicaCount: 1
+  image:
+    repository: "talos:30500/toskamesh-dashboard"
+    tag: "v2.9.0"
+    pullPolicy: IfNotPresent
+  service:
+    type: NodePort
+    port: 8080
+    nodePort: 30081
+  ingress:
+    enabled: false
+  gatewayBaseUrl: "http://talos:30080"

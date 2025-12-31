@@ -1,0 +1,61 @@
+nameOverride: ""
+fullnameOverride: ""
+
+podSecurityContext:
+  enabled: true
+  runAsNonRoot: true
+  runAsUser: 101
+  seccompProfile:
+    type: RuntimeDefault
+
+containerSecurityContext:
+  enabled: true
+  allowPrivilegeEscalation: false
+  runAsNonRoot: true
+  runAsUser: 101
+  capabilities:
+    drop:
+      - ALL
+  seccompProfile:
+    type: RuntimeDefault
+
+mesh:
+  enabled: false
+  annotations:
+    sidecar.istio.io/inject: "true"
+    traffic.sidecar.istio.io/includeInboundPorts: "*"
+    security.istio.io/tlsMode: "istio"
+
+dashboard:
+  enabled: true
+  replicaCount: 1
+  image:
+    repository: toskamesh-dashboard
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    type: LoadBalancer
+    port: 8080
+  ingress:
+    enabled: false
+    className: ""
+    hosts:
+      - host: "dashboard.toskamesh.local"
+        paths:
+          - path: /
+            pathType: Prefix
+    tls: []
+  gatewayBaseUrl: "http://toskamesh.local"
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 250m
+      memory: 256Mi
+  hpa:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 3
+    targetCPUUtilizationPercentage: 70
+    targetMemoryUtilizationPercentage: 80
