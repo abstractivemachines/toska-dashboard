@@ -967,13 +967,6 @@ header {
   min-width: 0;
 }
 
-@media (min-width: 960px) {
-  .span-attributes-group[data-group="user_agent"],
-  .span-attributes-group[data-group="server"] {
-    grid-column: span 2;
-  }
-}
-
 .span-attributes-group-header {
   display: flex;
   align-items: center;
