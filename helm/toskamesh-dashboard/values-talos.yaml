@@ -4,7 +4,7 @@ dashboard:
   replicaCount: 1
   image:
     repository: "talos:30500/toskamesh-dashboard"
-    tag: "v2.9.3"
+    tag: "v2.9.4"
     pullPolicy: IfNotPresent
   service:
     type: NodePort

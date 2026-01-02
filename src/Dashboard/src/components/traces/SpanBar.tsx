@@ -111,26 +111,33 @@ export function SpanBar({ span }: SpanBarProps) {
                 </span>
               </div>
               <div className="span-attributes-groups">
-                {groupedAttributes.map((group) => (
-                  <div key={group.group} className="span-attributes-group">
-                    <div className="span-attributes-group-header">
-                      <span className="span-attributes-group-title">
-                        {group.group.replace(/_/g, ' ')}
-                      </span>
-                      <span className="span-attributes-group-count">{group.items.length}</span>
+                {groupedAttributes.map((group) => {
+                  const groupKey = group.group.toLowerCase().replace(/[^a-z0-9_-]/g, '-');
+                  return (
+                    <div
+                      key={group.group}
+                      className={`span-attributes-group span-attributes-group-${groupKey}`}
+                      data-group={groupKey}
+                    >
+                      <div className="span-attributes-group-header">
+                        <span className="span-attributes-group-title">
+                          {group.group.replace(/_/g, ' ')}
+                        </span>
+                        <span className="span-attributes-group-count">{group.items.length}</span>
+                      </div>
+                      <dl className="span-attributes-list">
+                        {group.items.map((item) => (
+                          <div key={item.fullKey} className="span-attribute-row">
+                            <dt className="span-attribute-key" title={item.fullKey}>
+                              {item.key}
+                            </dt>
+                            <dd className="span-attribute-value">{item.value || '-'}</dd>
+                          </div>
+                        ))}
+                      </dl>
                     </div>
-                    <dl className="span-attributes-list">
-                      {group.items.map((item) => (
-                        <div key={item.fullKey} className="span-attribute-row">
-                          <dt className="span-attribute-key" title={item.fullKey}>
-                            {item.key}
-                          </dt>
-                          <dd className="span-attribute-value">{item.value || '-'}</dd>
-                        </div>
-                      ))}
-                    </dl>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           )}
