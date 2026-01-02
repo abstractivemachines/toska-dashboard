@@ -951,6 +951,40 @@ header {
   font-weight: 500;
 }
 
+.span-attributes-groups {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.span-attributes-group {
+  padding: 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-alt);
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.span-attributes-group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+}
+
+.span-attributes-group-title {
+  font-weight: 600;
+}
+
+.span-attributes-group-count {
+  font-weight: 500;
+}
+
 .span-attributes-list {
   margin: 0;
   display: grid;
@@ -959,11 +993,12 @@ header {
 
 .span-attribute-row {
   display: grid;
-  grid-template-columns: minmax(160px, 260px) 1fr;
-  gap: 12px;
-  padding: 8px 10px;
-  border-radius: 8px;
-  background: var(--color-bg-alt);
+  grid-template-columns: minmax(120px, 160px) 1fr;
+  gap: 10px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
 }
 
 .span-attribute-key {
@@ -977,6 +1012,7 @@ header {
   font-size: 12px;
   color: var(--color-text);
   word-break: break-word;
+  font-family: "SF Mono", Monaco, Consolas, monospace;
 }
 
 /* ============================================================================
