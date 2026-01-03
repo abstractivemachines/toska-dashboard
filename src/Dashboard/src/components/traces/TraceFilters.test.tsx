@@ -39,7 +39,11 @@ describe('TraceFilters', () => {
       } as Response);
     });
 
-    renderWithProviders(<TraceFilters onFilterChange={vi.fn()} />);
+    renderWithProviders(
+      <TraceFilters
+        onFilterChange={vi.fn()}
+      />
+    );
 
     const serviceInput = screen.getByLabelText('Service');
     fireEvent.change(serviceInput, { target: { value: 'check' } });
@@ -72,7 +76,11 @@ describe('TraceFilters', () => {
       json: async () => [],
     } as Response);
 
-    renderWithProviders(<TraceFilters onFilterChange={onFilterChange} />);
+    renderWithProviders(
+      <TraceFilters
+        onFilterChange={onFilterChange}
+      />
+    );
 
     fireEvent.change(screen.getByLabelText('Service'), { target: { value: 'checkout' } });
     fireEvent.change(screen.getByLabelText('Operation'), { target: { value: 'GET /checkout' } });
@@ -90,6 +98,26 @@ describe('TraceFilters', () => {
       expect(durationInput.value).toBe('');
     });
 
-    expect(onFilterChange).toHaveBeenCalledWith({});
+    expect(onFilterChange).toHaveBeenCalledWith({ excludeBuiltInServices: true });
+  });
+
+  it('toggles built-in service filter and notifies consumer', async () => {
+    const onFilterChange = vi.fn();
+    vi.mocked(fetch).mockResolvedValue({
+      ok: true,
+      json: async () => [],
+    } as Response);
+
+    renderWithProviders(
+      <TraceFilters
+        onFilterChange={onFilterChange}
+      />
+    );
+
+    fireEvent.click(screen.getByLabelText('Hide built-in services'));
+
+    await waitFor(() => {
+      expect(onFilterChange).toHaveBeenCalledWith({ excludeBuiltInServices: false });
+    });
   });
 });

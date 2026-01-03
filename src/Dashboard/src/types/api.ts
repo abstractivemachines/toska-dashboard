@@ -117,6 +117,7 @@ export interface TraceQueryParameters {
   page?: number;
   pageSize?: number;
   includeTotal?: boolean;
+  excludeBuiltInServices?: boolean;
 }
 
 export interface TracePerformanceResponse {

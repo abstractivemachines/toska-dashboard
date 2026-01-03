@@ -676,6 +676,20 @@ header {
   gap: 8px;
 }
 
+.filter-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.filter-checkbox input {
+  accent-color: var(--color-primary);
+}
+
 .btn {
   padding: 8px 16px;
   border: none;

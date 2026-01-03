@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { useConfig } from '../context';
 import { getTraces } from '../api/traces';
 import type { TraceQueryParameters, TraceQueryResponse } from '../types/api';
@@ -16,6 +16,7 @@ export function useTraces(params?: TraceQueryParameters): UseTracesResult {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [refetchCount, setRefetchCount] = useState(0);
+  const requestIdRef = useRef(0);
 
   const refetch = useCallback(() => {
     setRefetchCount((c) => c + 1);
@@ -23,19 +24,23 @@ export function useTraces(params?: TraceQueryParameters): UseTracesResult {
 
   useEffect(() => {
     const controller = new AbortController();
+    const requestId = ++requestIdRef.current;
     setLoading(true);
     setError(null);
 
     getTraces(gatewayBaseUrl, params, controller.signal)
       .then((response) => {
+        if (requestId !== requestIdRef.current) return;
         setData(response);
         setError(null);
       })
       .catch((err) => {
+        if (requestId !== requestIdRef.current) return;
         if (err.name === 'AbortError') return;
         setError(err.message || 'Failed to load traces');
       })
       .finally(() => {
+        if (requestId !== requestIdRef.current) return;
         setLoading(false);
       });
 

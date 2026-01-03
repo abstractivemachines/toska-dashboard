@@ -31,6 +31,9 @@ export async function getTraces(
     if (params.page !== undefined) queryParams.page = params.page.toString();
     if (params.pageSize !== undefined) queryParams.pageSize = params.pageSize.toString();
     if (params.includeTotal) queryParams.includeTotal = 'true';
+    if (params.excludeBuiltInServices !== undefined) {
+      queryParams.excludeBuiltInServices = params.excludeBuiltInServices.toString();
+    }
   }
 
   return apiGet<TraceQueryResponse>(baseUrl, TRACES_BASE, queryParams, signal);

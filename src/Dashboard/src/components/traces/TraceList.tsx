@@ -6,7 +6,9 @@ import { TraceFilters } from './TraceFilters';
 import type { TraceQueryParameters } from '../../types/api';
 
 export function TraceList() {
-  const [filters, setFilters] = useState<TraceQueryParameters>({});
+  const [filters, setFilters] = useState<TraceQueryParameters>({
+    excludeBuiltInServices: true,
+  });
   const [includeTotal, setIncludeTotal] = useState(false);
   const queryParams = useMemo(
     () => ({ ...filters, includeTotal }),
@@ -21,19 +23,24 @@ export function TraceList() {
   }, [data]);
 
   const handleFilterChange = useCallback((params: TraceQueryParameters) => {
-    setFilters(params);
+    setFilters((current) => ({
+      ...params,
+      excludeBuiltInServices: params.excludeBuiltInServices ?? current.excludeBuiltInServices ?? true,
+    }));
   }, []);
 
   return (
     <div className="trace-list">
-      <TraceFilters onFilterChange={handleFilterChange} />
+      <TraceFilters
+        onFilterChange={handleFilterChange}
+      />
 
       {loading && <LoadingState message="Loading traces..." />}
       {!loading && error && <ErrorState message={error} onRetry={refetch} />}
-      {!loading && !error && (!data || data.items.length === 0) && (
+      {!loading && !error && (!data || sortedItems.length === 0) && (
         <p className="muted">No traces found.</p>
       )}
-      {!loading && !error && data && data.items.length > 0 && (
+      {!loading && !error && data && sortedItems.length > 0 && (
         <>
           <div className="table-container">
             <table className="data-table">
@@ -57,8 +64,8 @@ export function TraceList() {
           </div>
           <div className="pagination-info">
             {includeTotal
-              ? `Showing ${data.items.length} of ${data.total} traces (Page ${data.page})`
-              : `Showing ${data.items.length} traces (Page ${data.page})`}
+              ? `Showing ${sortedItems.length} of ${data.total} traces (Page ${data.page})`
+              : `Showing ${sortedItems.length} traces (Page ${data.page})`}
             {' '}
             <button
               type="button"

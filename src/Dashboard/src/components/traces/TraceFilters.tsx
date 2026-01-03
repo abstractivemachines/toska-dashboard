@@ -18,7 +18,9 @@ function useDebounce<T>(value: T, delay: number): T {
   return debouncedValue;
 }
 
-export function TraceFilters({ onFilterChange }: TraceFiltersProps) {
+export function TraceFilters({
+  onFilterChange,
+}: TraceFiltersProps) {
   const { gatewayBaseUrl } = useConfig();
   const [allServices, setAllServices] = useState<string[]>([]);
   const [allOperations, setAllOperations] = useState<string[]>([]);
@@ -26,6 +28,7 @@ export function TraceFilters({ onFilterChange }: TraceFiltersProps) {
   const [operationName, setOperationName] = useState('');
   const [status, setStatus] = useState('');
   const [minDuration, setMinDuration] = useState('');
+  const [excludeBuiltInServices, setExcludeBuiltInServices] = useState(true);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [showOperationSuggestions, setShowOperationSuggestions] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -63,21 +66,33 @@ export function TraceFilters({ onFilterChange }: TraceFiltersProps) {
 
   // Track if this is the initial mount
   const isInitialMount = useRef(true);
+  const skipNextAutoApply = useRef(false);
 
   // Build filter params
-  const buildParams = useCallback((): TraceQueryParameters => {
+  const buildParams = useCallback((overrides?: Partial<TraceQueryParameters>): TraceQueryParameters => {
     const params: TraceQueryParameters = {};
     if (debouncedServiceName) params.serviceName = debouncedServiceName;
     if (debouncedOperationName) params.operationName = debouncedOperationName;
     if (debouncedStatus) params.status = debouncedStatus;
     if (debouncedMinDuration) params.minDurationMs = parseFloat(debouncedMinDuration);
-    return params;
-  }, [debouncedServiceName, debouncedOperationName, debouncedStatus, debouncedMinDuration]);
+    params.excludeBuiltInServices = excludeBuiltInServices;
+    return { ...params, ...overrides };
+  }, [
+    debouncedServiceName,
+    debouncedOperationName,
+    debouncedStatus,
+    debouncedMinDuration,
+    excludeBuiltInServices,
+  ]);
 
   // Auto-apply when any debounced value changes
   useEffect(() => {
     if (isInitialMount.current) {
       isInitialMount.current = false;
+      return;
+    }
+    if (skipNextAutoApply.current) {
+      skipNextAutoApply.current = false;
       return;
     }
     onFilterChange(buildParams());
@@ -113,7 +128,7 @@ export function TraceFilters({ onFilterChange }: TraceFiltersProps) {
     setStatus('');
     setMinDuration('');
     // Trigger immediate update on clear
-    onFilterChange({});
+    onFilterChange({ excludeBuiltInServices });
   };
 
   // Close suggestions when clicking outside
@@ -230,6 +245,20 @@ export function TraceFilters({ onFilterChange }: TraceFiltersProps) {
         </div>
 
         <div className="filter-actions">
+          <label className="filter-checkbox" htmlFor="exclude-built-in">
+            <input
+              id="exclude-built-in"
+              type="checkbox"
+              checked={excludeBuiltInServices}
+              onChange={(e) => {
+                const nextChecked = e.target.checked;
+                skipNextAutoApply.current = true;
+                setExcludeBuiltInServices(nextChecked);
+                onFilterChange(buildParams({ excludeBuiltInServices: nextChecked }));
+              }}
+            />
+            Hide built-in services
+          </label>
           <button onClick={handleClear} className="btn btn-secondary">
             Clear
           </button>
