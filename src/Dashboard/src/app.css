@@ -1095,10 +1095,8 @@ header {
 }
 
 .metric-body {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
+  display: grid;
+  gap: 10px;
 }
 
 .metric-value {
@@ -1114,8 +1112,8 @@ header {
   margin-left: 4px;
 }
 
-.sparkline {
-  flex-shrink: 0;
+.metric-chart {
+  width: 100%;
 }
 
 .sparkline-empty {
@@ -1125,6 +1123,354 @@ header {
   background: var(--color-bg-alt);
   border-radius: var(--radius-sm);
   font-size: 11px;
+  min-height: 120px;
+}
+
+/* ============================================================================
+   Observability Components
+   ============================================================================ */
+.observability-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.observability-grid .panel {
+  margin-top: 0;
+}
+
+.portal-list {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0 0;
+  display: grid;
+  gap: 12px;
+}
+
+.portal-card {
+  padding: 16px;
+  background: var(--color-bg-alt);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  display: grid;
+  gap: 8px;
+}
+
+.portal-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.portal-link {
+  font-size: 12px;
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.portal-link:hover {
+  text-decoration: underline;
+}
+
+.portal-template {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-text-muted);
+}
+
+.severity-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.severity-center {
+  fill: var(--color-text);
+  font-size: 10px;
+  text-transform: capitalize;
+}
+
+.chart-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.chart-card {
+  padding: 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: linear-gradient(180deg, var(--color-bg-alt), rgba(255, 255, 255, 0.02));
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: var(--shadow-sm);
+}
+
+.chart-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.chart-card h4 {
+  margin: 0;
+  font-size: 14px;
+}
+
+.chart-unit {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.chart-shell {
+  height: 220px;
+  width: 100%;
+}
+
+.slo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.slo-card {
+  padding: 16px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-alt);
+  display: grid;
+  gap: 8px;
+}
+
+.slo-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.slo-description {
+  font-size: 13px;
+}
+
+.slo-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 8px;
+}
+
+.slo-metric-label {
+  display: block;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+}
+
+.slo-metric-value {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.slo-windows {
+  display: grid;
+  gap: 8px;
+}
+
+.slo-window {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  font-size: 12px;
+}
+
+.slo-window-label {
+  font-weight: 600;
+}
+
+.burn-alerts {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0 0;
+  display: grid;
+  gap: 12px;
+}
+
+.burn-alert-card {
+  padding: 16px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-alt);
+  display: grid;
+  gap: 12px;
+}
+
+.burn-alert-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.burn-alert-windows {
+  display: grid;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.burn-alert-window {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.release-links {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.release-links a {
+  font-size: 12px;
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.release-links a:hover {
+  text-decoration: underline;
+}
+
+.playbook-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.playbook-card {
+  padding: 16px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-alt);
+  display: grid;
+  gap: 8px;
+}
+
+.playbook-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.playbook-description {
+  font-size: 13px;
+}
+
+.playbook-related {
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+.playbook-steps summary {
+  cursor: pointer;
+  color: var(--color-primary);
+  font-size: 12px;
+}
+
+.playbook-steps-body {
+  display: grid;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.playbook-step {
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.playbook-step h4 {
+  margin: 0 0 8px;
+  font-size: 14px;
+}
+
+.playbook-step-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  font-size: 12px;
+}
+
+.playbook-step-label {
+  display: block;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  margin-bottom: 6px;
+}
+
+.playbook-step ul {
+  margin: 0;
+  padding-left: 16px;
+}
+
+.topology-panel {
+  display: grid;
+  gap: 16px;
+}
+
+.topology-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  padding: 12px;
+  background: var(--color-bg-alt);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+}
+
+.topology-label {
+  display: block;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+}
+
+.topology-value {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.topology-alerts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.observability-section {
+  margin-top: 24px;
+  display: grid;
+  gap: 12px;
+}
+
+.observability-section:first-child {
+  margin-top: 0;
+}
+
+.observability-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
 }
 
 /* ============================================================================

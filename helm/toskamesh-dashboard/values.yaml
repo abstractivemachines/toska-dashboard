@@ -46,6 +46,7 @@ dashboard:
             pathType: Prefix
     tls: []
   gatewayBaseUrl: "http://toskamesh.local"
+  observabilityBaseUrl: ""
   resources:
     requests:
       cpu: 50m

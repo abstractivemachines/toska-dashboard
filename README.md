@@ -10,6 +10,11 @@ npm install
 VITE_GATEWAY_BASE_URL=http://localhost:5000 npm run dev
 ```
 
+Optional: point the observability panels at a separate service:
+```bash
+VITE_GATEWAY_BASE_URL=http://localhost:5000 VITE_OBSERVABILITY_BASE_URL=http://localhost:5000 npm run dev
+```
+
 ## Build the Docker image
 
 ```bash

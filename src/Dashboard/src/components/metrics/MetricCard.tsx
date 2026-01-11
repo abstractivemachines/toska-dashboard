@@ -1,4 +1,11 @@
-import { Sparkline } from './Sparkline';
+import {
+  Area,
+  AreaChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts';
 import type { PrometheusResult } from '../../types/api';
 
 interface MetricCardProps {
@@ -11,33 +18,30 @@ interface MetricCardProps {
   formatValue?: (value: number) => string;
 }
 
-function extractChartData(data: PrometheusResult | null): [number[], number[]] {
+type ChartPoint = { ts: number; value: number };
+
+function extractChartData(data: PrometheusResult | null): ChartPoint[] {
   if (!data || data.status !== 'success' || data.data.result.length === 0) {
-    return [[], []];
+    return [];
   }
 
   const result = data.data.result[0];
 
   // Range query (matrix)
   if (result.values) {
-    const timestamps: number[] = [];
-    const values: number[] = [];
-
-    for (const [ts, val] of result.values) {
-      timestamps.push(ts);
-      values.push(parseFloat(val) || 0);
-    }
-
-    return [timestamps, values];
+    return result.values.map(([ts, val]) => ({
+      ts,
+      value: parseFloat(val) || 0,
+    }));
   }
 
   // Instant query (vector)
   if (result.value) {
     const [ts, val] = result.value;
-    return [[ts], [parseFloat(val) || 0]];
+    return [{ ts, value: parseFloat(val) || 0 }];
   }
 
-  return [[], []];
+  return [];
 }
 
 function getCurrentValue(data: PrometheusResult | null): number | null {
@@ -77,6 +81,7 @@ export function MetricCard({
 }: MetricCardProps) {
   const chartData = extractChartData(data);
   const currentValue = getCurrentValue(data);
+  const noData = chartData.length === 0;
 
   return (
     <div className="metric-card">
@@ -91,16 +96,63 @@ export function MetricCard({
           </span>
         )}
         {!loading && !error && currentValue !== null && (
-          <>
-            <span className="metric-value">
-              {formatValue(currentValue)}
-              {unit && <span className="metric-unit">{unit}</span>}
-            </span>
-            <Sparkline data={chartData} color={color} width={120} height={32} />
-          </>
+          <span className="metric-value">
+            {formatValue(currentValue)}
+            {unit && <span className="metric-unit">{unit}</span>}
+          </span>
         )}
-        {!loading && !error && currentValue === null && (
-          <span className="muted">N/A</span>
+        {!loading && !error && currentValue === null && <span className="muted">N/A</span>}
+        {!loading && !error && (
+          <div className="metric-chart">
+            {noData ? (
+              <div className="sparkline-empty">
+                <span className="muted">No data</span>
+              </div>
+            ) : (
+              <ResponsiveContainer width="100%" height={120}>
+                <AreaChart data={chartData} margin={{ top: 8, right: 6, left: 0, bottom: 0 }}>
+                  <defs>
+                    <linearGradient id={`metricGradient-${title}`} x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor={color} stopOpacity={0.35} />
+                      <stop offset="100%" stopColor={color} stopOpacity={0.08} />
+                    </linearGradient>
+                  </defs>
+                  <XAxis
+                    dataKey="ts"
+                    tick={false}
+                    axisLine={false}
+                    tickLine={false}
+                    type="number"
+                    domain={['dataMin', 'dataMax']}
+                  />
+                  <YAxis
+                    tick={{ fontSize: 10, fill: 'var(--color-text-muted)' }}
+                    width={38}
+                    axisLine={false}
+                    tickLine={false}
+                  />
+                  <Tooltip
+                    formatter={(value) => formatValue(Number(value))}
+                    labelFormatter={(ts) => new Date(Number(ts) * 1000).toLocaleTimeString()}
+                    contentStyle={{
+                      background: 'var(--color-bg-alt)',
+                      border: '1px solid var(--color-border)',
+                      color: 'var(--color-text)',
+                    }}
+                  />
+                  <Area
+                    dataKey="value"
+                    type="monotone"
+                    stroke={color}
+                    strokeWidth={2}
+                    fill={`url(#metricGradient-${title})`}
+                    dot={false}
+                    activeDot={{ r: 3, strokeWidth: 1, stroke: color }}
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            )}
+          </div>
         )}
       </div>
     </div>

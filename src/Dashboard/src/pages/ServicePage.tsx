@@ -1,5 +1,6 @@
 import { useServiceDetail } from '../hooks';
 import { ServiceDetail } from '../components/services';
+import { ServiceObservabilityPanel } from '../components/observability';
 import { MetricsPanel } from '../components/metrics';
 import { LoadingState, ErrorState } from '../components/common';
 
@@ -27,6 +28,7 @@ export function ServicePage({ serviceName }: ServicePageProps) {
     <>
       <ServiceDetail service={service} />
       <MetricsPanel serviceName={decodedName} />
+      <ServiceObservabilityPanel serviceName={decodedName} />
     </>
   );
 }

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import App from './App';
 
 describe('App', () => {
@@ -34,8 +34,10 @@ describe('App', () => {
     render(<App />);
 
     // Assert
-    expect(screen.getByText('Services')).toBeInTheDocument();
-    expect(screen.getByText('Traces')).toBeInTheDocument();
+    const navigation = screen.getByRole('navigation');
+    expect(within(navigation).getByText('Services')).toBeInTheDocument();
+    expect(within(navigation).getByText('Traces')).toBeInTheDocument();
+    expect(within(navigation).getByText('Observability')).toBeInTheDocument();
   });
 
   it('shows home page by default', async () => {
@@ -57,17 +59,56 @@ describe('App', () => {
   it('shows service page when navigating to #/services/:name', async () => {
     // Arrange
     window.location.hash = '#/services/my-service';
-    vi.mocked(fetch).mockResolvedValue({
-      ok: true,
-      json: async () => [
-        {
-          serviceName: 'my-service',
-          instances: [],
-          health: [],
-          metadata: null,
-        },
-      ],
-    } as Response);
+    vi.mocked(fetch).mockImplementation(async (input) => {
+      const url = typeof input === 'string' ? input : input.url;
+
+      if (url.includes('/api/dashboard/services')) {
+        return {
+          ok: true,
+          json: async () => [
+            {
+              serviceName: 'my-service',
+              instances: [],
+              health: [],
+              metadata: null,
+            },
+          ],
+        } as Response;
+      }
+
+      if (url.includes('/api/dashboard/prometheus/query-range')) {
+        return {
+          ok: true,
+          json: async () => ({
+            status: 'success',
+            data: { resultType: 'matrix', result: [] },
+          }),
+        } as Response;
+      }
+
+      if (url.includes('/observability/dashboards/service/')) {
+        return {
+          ok: true,
+          json: async () => ({
+            service: 'my-service',
+            metrics: null,
+            sloStatuses: [],
+            recentReleases: [],
+            playbooks: [],
+            topology: {
+              generatedAt: new Date().toISOString(),
+              nodes: [],
+              edges: [],
+            },
+          }),
+        } as Response;
+      }
+
+      return {
+        ok: true,
+        json: async () => [],
+      } as Response;
+    });
 
     // Act
     render(<App />);

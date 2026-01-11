@@ -3,6 +3,7 @@
  * Mirrors backend DTOs from:
  * - src/Core/ToskaMesh.Gateway/Models/DashboardDtos.cs
  * - src/Services/ToskaMesh.TracingService/Models/TraceDtos.cs
+ * - src/Services/ToskaMesh.ObservabilityService/Models/*
  * - src/Shared/ToskaMesh.Protocols/IServiceRegistry.cs
  */
 
@@ -143,6 +144,146 @@ export interface OperationHotspot {
 }
 
 // ============================================================================
+// Observability Types
+// ============================================================================
+
+export interface ObservabilityPortalEntry {
+  name: string;
+  path: string;
+  description: string;
+}
+
+export interface MetricSummary {
+  service: string;
+  requestRatePerSecond: number;
+  errorRate: number;
+  p95LatencyMs: number;
+  saturation: number;
+  capturedAt: string;
+}
+
+export interface SpanRecord {
+  service: string;
+  dependency: string;
+  durationMs: number;
+  isError: boolean;
+}
+
+export interface TopologyNode {
+  id: string;
+  displayName: string;
+  traffic: number;
+  errorRate: number;
+  p95LatencyMs: number;
+  alerts: string[];
+}
+
+export interface TopologyEdge {
+  from: string;
+  to: string;
+  traffic: number;
+  avgLatencyMs: number;
+  errorRate: number;
+}
+
+export interface TopologyGraph {
+  generatedAt: string;
+  nodes: TopologyNode[];
+  edges: TopologyEdge[];
+}
+
+export interface SloDefinition {
+  id: string;
+  service: string;
+  name: string;
+  description: string;
+  objective: number;
+  errorBudgetWindow: string;
+  burnRateThreshold: number;
+}
+
+export interface SloWindowStatus {
+  windowLabel: string;
+  sli: number;
+  burnRate: number;
+  errorBudgetRemaining: number;
+  errorBudgetRemainingMinutes: number;
+  totalRequests: number;
+  errorRequests: number;
+}
+
+export interface SloStatus {
+  definition: SloDefinition;
+  windows: SloWindowStatus[];
+  maxBurnRate: number;
+  isBurnRateAlert: boolean;
+  severity: string;
+}
+
+export interface BurnRateAlert {
+  sloId: string;
+  service: string;
+  burnRate: number;
+  severity: string;
+  windows: SloWindowStatus[];
+}
+
+export interface ReleaseRecord {
+  id: string;
+  service: string;
+  version: string;
+  environment: string;
+  deployedAt: string;
+  diffUrl: string;
+  rollbackUrl: string;
+  triggeredBy: string;
+  blastRadiusServices: string[];
+}
+
+export interface ReleaseIngestRequest {
+  service: string;
+  version: string;
+  environment: string;
+  diffUrl: string;
+  triggeredBy: string;
+  blastRadiusServices: string[];
+}
+
+export interface RollbackResult {
+  releaseId: string;
+  service: string;
+  rollbackUrl: string;
+  status: string;
+  requestedAt: string;
+}
+
+export interface PlaybookStep {
+  title: string;
+  logSnippets: string[];
+  metricsOverlays: string[];
+  actions: string[];
+}
+
+export interface PlaybookDefinition {
+  id: string;
+  service: string;
+  title: string;
+  description: string;
+  severity: string;
+  relatedReleaseIds: string[];
+  steps: PlaybookStep[];
+}
+
+export interface ServiceDashboard {
+  service: string;
+  metrics: MetricSummary | null;
+  sloStatuses: SloStatus[];
+  recentReleases: ReleaseRecord[];
+  playbooks: PlaybookDefinition[];
+  topology: TopologyGraph;
+}
+
+// ============================================================================
 // Prometheus Types
 // ============================================================================
 
@@ -170,6 +311,7 @@ export interface PrometheusMetricResult {
 
 export interface DashboardConfig {
   gatewayBaseUrl?: string;
+  observabilityBaseUrl?: string;
 }
 
 declare global {

@@ -8,6 +8,7 @@ interface NavItem {
 const NAV_ITEMS: NavItem[] = [
   { path: '/', label: 'Services' },
   { path: '/traces', label: 'Traces' },
+  { path: '/observability', label: 'Observability' },
 ];
 
 export function Navigation() {

@@ -42,6 +42,8 @@ spec:
         env:
         - name: DASHBOARD_GATEWAY_BASE_URL
           value: {{ .Values.dashboard.gatewayBaseUrl | quote }}
+        - name: DASHBOARD_OBSERVABILITY_BASE_URL
+          value: {{ default .Values.dashboard.gatewayBaseUrl .Values.dashboard.observabilityBaseUrl | quote }}
         resources:
           {{- toYaml .Values.dashboard.resources | nindent 10 }}
         livenessProbe:

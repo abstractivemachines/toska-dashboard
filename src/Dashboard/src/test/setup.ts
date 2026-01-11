@@ -11,7 +11,7 @@ afterEach(() => {
 
 // Mock window.__DASHBOARD_CONFIG__
 Object.defineProperty(window, '__DASHBOARD_CONFIG__', {
-  value: { gatewayBaseUrl: 'http://localhost:5000' },
+  value: { gatewayBaseUrl: 'http://localhost:5000', observabilityBaseUrl: 'http://localhost:5000' },
   writable: true,
   configurable: true,
 });

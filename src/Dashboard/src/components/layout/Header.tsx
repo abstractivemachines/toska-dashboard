@@ -2,7 +2,7 @@ import { useConfig } from '../../context';
 import { useTheme } from '../../hooks';
 
 export function Header() {
-  const { gatewayBaseUrl } = useConfig();
+  const { gatewayBaseUrl, observabilityBaseUrl } = useConfig();
   const { theme, toggleTheme } = useTheme();
 
   return (
@@ -39,6 +39,8 @@ export function Header() {
         <div className="meta">
           <span>Gateway</span>
           <strong>{gatewayBaseUrl || 'relative'}</strong>
+          <span>Observability</span>
+          <strong>{observabilityBaseUrl || 'relative'}</strong>
         </div>
       </div>
     </header>

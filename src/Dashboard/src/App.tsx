@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { ConfigProvider } from './context';
 import { useHashRouter, createRoute } from './router';
 import { Footer, Header, Navigation } from './components/layout';
-import { HomePage, ServicePage, TracesPage, TraceDetailPage, NotFoundPage } from './pages';
+import { HomePage, ServicePage, TracesPage, TraceDetailPage, ObservabilityPage, NotFoundPage } from './pages';
 import './app.css';
 
 // Define routes
@@ -11,6 +11,7 @@ const routes = [
   createRoute('/services/:name'),
   createRoute('/traces'),
   createRoute('/traces/:traceId'),
+  createRoute('/observability'),
 ];
 
 function Router() {
@@ -31,6 +32,8 @@ function Router() {
         return <TracesPage />;
       case '/traces/:traceId':
         return <TraceDetailPage traceId={params.traceId} />;
+      case '/observability':
+        return <ObservabilityPage />;
       default:
         return <NotFoundPage />;
     }

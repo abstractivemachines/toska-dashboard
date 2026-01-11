@@ -23,6 +23,7 @@ dashboard:
         hosts:
           - "dashboard.example.com"
   gatewayBaseUrl: "https://gateway.example.com"
+  observabilityBaseUrl: ""
   resources:
     requests:
       cpu: 200m
