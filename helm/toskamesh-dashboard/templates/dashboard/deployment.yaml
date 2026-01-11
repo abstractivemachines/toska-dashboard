@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "toskadashboard.fullname" . }}-dashboard
+  name: {{ include "toskadashboard.fullname" . }}
   labels:
     {{- include "toskadashboard.labels" . | nindent 4 }}
     app.kubernetes.io/component: dashboard
